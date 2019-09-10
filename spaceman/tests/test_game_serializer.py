@@ -1,11 +1,11 @@
 from django.test import TestCase
-from game_api.serializers import GameSerializer
+from spaceman.game_api.serializers import GameSerializer
 
 from django.core.exceptions import ValidationError
 
 from unittest.mock import *
-from game_api.random_words import RandomWord
-from game_api.models import Game
+from spaceman.game_api.random_words import RandomWord
+from spaceman.game_api.models import Game
 
 from rest_framework.serializers import ModelSerializer, ValidationError
 

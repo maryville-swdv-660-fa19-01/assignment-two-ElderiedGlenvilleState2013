@@ -1,5 +1,5 @@
 from django.test import TestCase
-from game_api.models import Game
+from spaceman.game_api.models import Game
 
 from django.core.exceptions import ValidationError
 
