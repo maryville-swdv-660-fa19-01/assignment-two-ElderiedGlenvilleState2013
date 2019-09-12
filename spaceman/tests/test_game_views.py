@@ -1,12 +1,14 @@
-from django.test import TestCase
+import json
 from unittest.mock import *
+
+from django.http.request import HttpRequest
+from django.test import TestCase
+from more_itertools.more import side_effect
 from rest_framework.test import APIRequestFactory
 
-from game_api.views import *
 from game_api.models import Game
+from game_api.views import *
 
-import json
-from django.http.request import HttpRequest
 
 class GameApiViewTests( TestCase ):
 
@@ -73,3 +75,25 @@ class GameApiViewTests( TestCase ):
     # HINT: remember the `setUp` fixture that is in this test class, 
     #   it constructs things that might be useful
 
+    def test_get_solution_if_solution_is_found(self):
+        with patch.object(Game.objects, 'get') as mock_get:
+            self.mock_game.word = 'tony stark'
+            mock_get.return_value = self.mock_game
+
+            response = game_solution(self.mock_get_request, 25)
+
+            mock_get.assert_called_with(pk = 25) 
+            self.assertEqual (response.status_code, 200)
+
+            test_solution = {'solution' : 'tony stark'}
+            self.assertDictEqual(response.data, test_solution)
+
+
+    def test_get_solution_show_404_if_game_id_is_not_found(self):
+        with patch.object(Game.objects, 'get' ) as mock_get:
+            mock_get.side_effect = Game.DoesNotExist 
+
+            response = game_solution(self.mock_get_request, 25)
+            self.assertEqual(response.status_code, 404)
+
+            
